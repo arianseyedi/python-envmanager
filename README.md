@@ -176,7 +176,7 @@ Here is the list of available casting methods:
     
     parses the target environment variable as a string
     
-* _**json(self, key, **loads_kwargs)**_:
+* _**json(self, key, \*\*loads_kwargs)**_:
     
     parses the target environment variable as a json using json.loads and then json.dumps functions
 
@@ -202,7 +202,7 @@ Here is the list of available casting methods:
     
 * _**uuid(self, key, \*args, \*\*kwargs)**_: 
     
-   constructs a new UUID instance
+   constructs a new UUID instance, kwargs also passed to the constructor if any.
     
 * _**log_level_as_int(self, key)**_:
  
