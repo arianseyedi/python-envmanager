@@ -89,18 +89,40 @@ keys in two different groups.
 Envmanager is created with scalability in mind. It is often the case that your environment variables are dependent on which environment your application is being run from (e.g. prod vs dev) while some variables are common.
 The way Envmanager works is that it **takes exactly two sections per config file**: one **"common"** and one **"environment dependent"**.
 
-![img](assets/screenshot_modes_sections.png)
-
-Notice how the mode is named after the available section in the file. Changing the mode to dev will result in the host value being equal to 'dev-host' during run-time.
-
-> You are NOT obligated to specify mode or any other section than the one you want. Either ensure the section name is set to "**common**" or specify the name using "**common_section_identifier**" argument of the configuration.
 
 #### Mode
-The mode, which tells the envmanager which section (in addition to the common section) is to be used, is denoted by the key "mode" by default.
 
-If this value is missing, simply the common section values will be read and maybe validated/parsed (if schema is provided).
+The mode, which tells the envmanager which section (in addition to the common section) is to be read, is denoted by the key named "environment_mode".
 
-> In case you wish to denote this key by a different value, you need to override the default value via "**environment_identifier_key**" argument of the configuration.
+* Defining the mode in-file style:
+
+    If this value is missing, simply the common section values will be read and maybe validated/parsed (if schema is provided).
+    
+    ![img](assets/screenshot_modes_section.png)
+    
+    Notice how the mode is named after the available section in the file. Changing the mode to dev will result in the host value being equal to 'dev-host' during run-time.
+    
+    - Note#1
+        
+    > You are NOT obligated to specify mode or any other section than the one you want. Either ensure the section name is set to "**common**" or specify the name using "**common_section_identifier**" argument of the configuration.
+   
+    - Note#2
+    > In case you wish to denote this key by a different value, you need to override the default value via "**environment_identifier_key**" argument of the configuration.
+    
+* Defining the the environment mode during configuration:
+    
+    In case of loading multiple *.cfg files (e.g. env_paths argument is an array of more than a single path) you may want to
+    specify the environment one time only, since a mismatch may cause some nasty runtime complications. In that case, simply set the "**environment_mode**" argument of the configuration which is by default None which causes the Envmanager to fall back on file-style mode specification:
+    ```python
+    from envmanager import EnvManagerConfig
+    from MyConstants import ENVIRONMENT_MODE
+    
+    config = EnvManagerConfig(
+      ...,
+      environment_mode=ENVIRONMENT_MODE  # this one overrides the modes defined in all files
+  )
+``` 
+
 
 ## EnvManagerConfig class
 

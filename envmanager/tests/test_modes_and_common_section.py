@@ -12,6 +12,7 @@ Tests eager validation
 
 @pytest.fixture
 def env():
+    print('hh')
     @env_loader(config)
     def inner():
         from envmanager.core import Env
@@ -29,7 +30,7 @@ def test_set_value(env):
 
 
 def test_get_correct_environment_var(env):
-    res = env('myenvironment')
+    res = env('environment_mode')
     assert res == 'prod', "value-check of the enrivonment failed"
 
 

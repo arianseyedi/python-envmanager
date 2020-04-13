@@ -22,7 +22,7 @@ class EnvManagerConfig:
                  environment_mode=None,
                  schema=None,
                  common_section_identifier=ReservableEnvSections.common.value,
-                 environment_identifier_key=ReservableEnvKeys.mode.value,
+                 environment_identifier_key=ReservableEnvKeys.environment_mode.value,
                  plan=None):
         """
         Configuration settings as a plain python object

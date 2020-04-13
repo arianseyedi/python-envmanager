@@ -157,7 +157,7 @@ def load_for_app(app_name, env_paths, schema=None, common_section_name=None, mod
 def build_plans(group_name, env_paths, schema, eager_validate,
                 environment_mode,
                 common_section_identifier=ReservableEnvSections.common.value,
-                environment_identifier_key=ReservableEnvKeys.mode.value):
+                environment_identifier_key=ReservableEnvKeys.environment_mode.value):
     return {
         group_name: {
             'env_paths': env_paths,

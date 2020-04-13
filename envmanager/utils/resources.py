@@ -12,4 +12,4 @@ class ReservableEnvKeys(Enum):
     """
     This class is not to be modified.
     """
-    mode = 'mode'
+    environment_mode = 'environment_mode'

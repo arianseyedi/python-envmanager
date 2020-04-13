@@ -48,5 +48,5 @@ envloader_config_from_dict_multiapp = EnvManagerConfig.by_group({
 envloader_config_modes_and_common_section = EnvManagerConfig(group_name='TESTERAPP',
                                                        env_paths=[ENVS_PATH_EAGER_MODS_SINGLE],
                                                        common_section_identifier='mysection',
-                                                       environment_identifier_key='myenvironment',
+                                                       # environment_identifier_key='myenvironment',
                                                        eager_validate=True)
