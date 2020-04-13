@@ -162,56 +162,56 @@ my_int = env.int('my_schemaless_int_env_variable')
 > Note that using the casting methods will **override** the schema if used on keys whose schema is already defined.
 
 Here is the list of available casting methods:
-* _str(self, key)_
-* _int(self, key)_
-* _bool(self, key)_
-* _float(self, key)_
-* _dict(self, key)_:
+* _**str(self, key)**_
+* _**int(self, key)**_
+* _**bool(self, key)**_
+* _**float(self, key)**_
+* _**dict(self, key)**_:
     
     parses the target environment variable as a dictionary using json.loads function
 
-* _decimal(self, key, context=None)_
+* _**decimal(self, key, context=None)**_
 
-* _list(self, key)_:
+* _**list(self, key)**_:
     
     parses the target environment variable as a string
     
-* _json(self, key, **loads_kwargs)_:
+* _**json(self, key, **loads_kwargs)**_:
     
     parses the target environment variable as a json using json.loads and then json.dumps functions
 
-* _datetime(self, key, date_format='%m/%d/%y %H:%M:%S')_:
+* _**datetime(self, key, date_format='%m/%d/%y %H:%M:%S')**_:
     parses the target environment variable as a datetime object:
             datetime_str = '09/19/18 13:55:26'
             datetime_object = datetime.strptime(datetime_str, '%m/%d/%y %H:%M:%S')
     
-* _date(self, key, date_format='%m-%d-%Y')_:
+* _**date(self, key, date_format='%m-%d-%Y')**_:
     
     parses the target environment variable as a date object:
             date_str = '09-19-2018'
             date_object = datetime.strptime(date_str, '%m-%d-%Y').date()
             
-* _timedelta_sec(self, key)_:
+* _**timedelta_sec(self, key)**_:
 
     parses the target environment variable as a timedelta in seconds
     
-* _url(self, key)_:
+* _**url(self, key)**_:
     
     parses the target environment variable as a url object
         constructs a url object using the urlparse method from urllib library.
     
-* _uuid(self, key, \*args, \*\*kwargs)_: 
+* _**uuid(self, key, \*args, \*\*kwargs)**_: 
     
    constructs a new UUID instance
     
-* _log_level_as_int(self, key)_:
+* _**log_level_as_int(self, key)**_:
  
     converts the target environment variable to a valid log level as an integer using logging.getLevelName function: value DEBUG results in integer value 10
 
-* _llog_level_as_str(self, key)_: 
+* _**log_level_as_str(self, key)**_: 
 
     converts the target environment variable to a valid log level string value using logging.getLevelName function: value 10 results in string value DEBUG
-* _custom_parse(self, key, parser_function: Callable)_: 
+* _**custom_parse(self, key, parser_function: Callable)**_: 
     
     You can pass your own parser function that takes exactly 1 argument with no defaults
 
