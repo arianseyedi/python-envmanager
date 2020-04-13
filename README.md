@@ -118,15 +118,12 @@ The mode, which tells the envmanager which section (in addition to the common se
     from MyConstants import ENVIRONMENT_MODE
     
     config = EnvManagerConfig(
-      ...,
-      environment_mode=ENVIRONMENT_MODE  # this one overrides the modes defined in all files
-  )
-``` 
-
-
+          ...,
+          environment_mode=ENVIRONMENT_MODE  # this one overrides the modes defined in all files
+      )
+    ```
+ 
 ## EnvManagerConfig class
-
-
 
 ## Loading the Env Variables
 This usually happens at the point of entry of your application since one may need to access environment variables at any point within the app.
