@@ -1,4 +1,10 @@
-# Welcome to Envmanager for Python @Bytect
+<div style="width:100%; height:100px">
+<img src="assets/logo.png"
+     alt="bytect logo"
+     title="bytect logo"
+     style="width: 100%; height: 100%" /></div>
+
+# Welcome to Envmanager for Python Docs
 
 envmanager is a python package that enables environment management in the most awesome way possible!
 
