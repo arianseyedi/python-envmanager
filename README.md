@@ -1,8 +1,9 @@
-<div style="width:100%; height:100px">
+<p align="center">
 <img src="assets/logo.png"
      alt="bytect logo"
      title="bytect logo"
-     style="width: 100%; height: 100%" /></div>
+     style="width: 100%; height: 100%" /></p>
+
 
 # Welcome to Envmanager for Python Docs
 
