@@ -27,12 +27,14 @@ schema = {
     "custom_key": MyCustomValidator(),  # you can pass your own validator object to validate and parse custom environment variables!
 }
 
+...
+
 from envmanager import EnvManagerConfig
 
 envloader_config = EnvManagerConfig( 
     env_paths=['path/to/my_env_file.cfg'], 
     schema=schema,  # optional
-    eager_validate=True  # validate the schema values upon assigning them as environment variables 
+    eager_validate=True  # validate the env variables based on the schema upon assigning them as environment variables 
 )
 ```
 
@@ -96,20 +98,137 @@ If this value is missing, simply the common section values will be read and mayb
 
 > In case you wish to denote this key by a different value, you need to override the default value via "**environment_identifier_key**" argument of the configuration.
 
-### EnvManagerConfig class
+## EnvManagerConfig class
 
 
 
 ## Loading the Env Variables
+This usually happens at the point of entry of your application since one may need to access environment variables at any point within the app.
 
+There are two options when it comes to loading your environment variables: use a decorator or simply call the loader funtion:
+
+### Using the Decorator:
+_main.py_
+```python
+from envmanager.decorators import env_loader
+from envmanager import EnvManagerConfig
+
+config = EnvManagerConfig(...) 
+
+@env_loader(config)  # run prior to all other imports - saves all cfg file content onto the os.environ
+def app_entry_point():
+    from my_project import App  # ENSURE you do not import env-variable dependent code prior to envl_loader being called
+    App.start()
+```
+
+### Using the function:
+_main.py_
+```python
+from envmanager import load_env, EnvManagerConfig
+
+config = EnvManagerConfig(...) 
+
+def app_entry_point():
+    load_env(config)  # run prior to all other imports - saves all cfg file content onto the os.environ
+    from my_project import App  # ENSURE you do not import env-variable dependent code prior to envl_loader being called
+    App.start()
+```
 
 
 ### Env class
+You can access environment variables using an env object. Construct your Env class object by passing to the constructor the **same** config object used to load the env-variables earlier.
 
+```python
+from envmanager import Env
+ 
+env = Env(config)  # import config from your codebase
+```
 
+#### Getting a variable:
+There are multiple ways to get an environment variable. If you have provided a schema to the configuration, you simply call
+the env object itself and pass the key:
+```python
+my_int = env(MyEnumSchema.my_int_env_variable)  # schema provided is an Enum class object
+```
+```python
+my_int = env('my_int_env_variable')  # use string value matching the variable name if schema is not provided or is a dictionary
+```
+* Casting:  
+You may cast (the otherwise stringified) environment variable using env casting methods:
+```python
+my_int = env.int('my_schemaless_int_env_variable')
+``` 
+
+> Note that using the casting methods will **override** the schema if used on keys whose schema is already defined.
+
+Here is the list of available casting methods:
+* _str(self, key)_
+* _int(self, key)_
+* _bool(self, key)_
+* _float(self, key)_
+* _dict(self, key)_:
+    
+    parses the target environment variable as a dictionary using json.loads function
+
+* _decimal(self, key, context=None)_
+
+* _list(self, key)_:
+    
+    parses the target environment variable as a string
+    
+* _json(self, key, **loads_kwargs)_:
+    
+    parses the target environment variable as a json using json.loads and then json.dumps functions
+
+* _datetime(self, key, date_format='%m/%d/%y %H:%M:%S')_:
+    parses the target environment variable as a datetime object:
+            datetime_str = '09/19/18 13:55:26'
+            datetime_object = datetime.strptime(datetime_str, '%m/%d/%y %H:%M:%S')
+    
+* _date(self, key, date_format='%m-%d-%Y')_:
+    
+    parses the target environment variable as a date object:
+            date_str = '09-19-2018'
+            date_object = datetime.strptime(date_str, '%m-%d-%Y').date()
+            
+* _timedelta_sec(self, key)_:
+
+    parses the target environment variable as a timedelta in seconds
+    
+* _url(self, key)_:
+    
+    parses the target environment variable as a url object
+        constructs a url object using the urlparse method from urllib library.
+    
+* _uuid(self, key, \*args, \*\*kwargs)_: 
+    
+   constructs a new UUID instance
+    
+* _log_level_as_int(self, key)_:
+ 
+    converts the target environment variable to a valid log level as an integer using logging.getLevelName function: value DEBUG results in integer value 10
+
+* _llog_level_as_str(self, key)_: 
+
+    converts the target environment variable to a valid log level string value using logging.getLevelName function: value 10 results in string value DEBUG
+* _custom_parse(self, key, parser_function: Callable)_: 
+    
+    You can pass your own parser function that takes exactly 1 argument with no defaults
 
 ### The (Custom) Validator class
+You can create your own validator class. You must however ensure that your class implements function with the signature: *validate(self, value)* and **returns** the parsed value after validation.
 
+```python
+
+from envmanager import Validator  # the interface
+
+class MyValidator(Validator):
+    ...
+    def validate(self, v):
+        ... # validate v
+        return parsed_value
+
+```
 
 
 ## Issues

@@ -300,7 +300,7 @@ class Env:
         """
         return self(key, parser=lambda x: logging.getLevelName(x))
 
-    def log_level_as_string(self, key):
+    def log_level_as_str(self, key):
         """
         converts the target environment variable to a valid log level string value using logging.getLevelName function
             e.g. parsing 10 will return string value DEBUG

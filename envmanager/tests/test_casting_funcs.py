@@ -101,7 +101,7 @@ def test_cast_log_level(env):
 
 
 def test_cast_log_level(env):
-    res = env.log_level_as_string('unparsed_log_int')
+    res = env.log_level_as_str('unparsed_log_int')
     assert res == "DEBUG", "casting unparsed_log failed"
     assert env.clear('unparsed_log') is True, "expecting True when unparsed_log popped"
     # cannot retrieve anymore or throws an error
