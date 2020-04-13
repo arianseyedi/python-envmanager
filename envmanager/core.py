@@ -19,6 +19,7 @@ class EnvManagerConfig:
     def __init__(self, env_paths=None,
                  group_name="PYTHON_APPLICATION",
                  eager_validate=False,
+                 environment_mode=None,
                  schema=None,
                  common_section_identifier=ReservableEnvSections.common.value,
                  environment_identifier_key=ReservableEnvKeys.mode.value,
@@ -39,17 +40,19 @@ class EnvManagerConfig:
             self.plan = build_plans(group_name=group_name,
                                     env_paths=env_paths,
                                     schema=schema,
+                                    environment_mode=environment_mode,
                                     eager_validate=eager_validate,
                                     common_section_identifier=common_section_identifier,
                                     environment_identifier_key=environment_identifier_key)
 
     @staticmethod
-    def by_group(_dct: dict):
+    def by_group(_dct: dict, environment_mode=None):
         plans = {}
         for group_name, settings in _dct.items():
             plans.update(build_plans(group_name=group_name,
                                      env_paths=settings['env_paths'],
-                                     schema=settings['schema'],
+                                     schema=settings.get('schema'),
+                                     environment_mode=environment_mode,
                                      eager_validate=settings.get('eager_validate'),
                                      common_section_identifier=settings.get('common_section_identifier'),
                                      environment_identifier_key=settings.get('environment_identifier_key')))

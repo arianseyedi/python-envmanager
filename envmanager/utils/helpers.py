@@ -56,9 +56,10 @@ def setenv(parsed_cfg, prepender, mode=None, schema=None, common_section_name=No
             set_environ_var(parsed_cfg, mode, _k, prepender)
 
 
-def load_envs(path, prepender, schema=None, mode_key=None, common_section_name=None):
+def load_envs(path, prepender, schema=None, mode=None, mode_key=None, common_section_name=None):
     parsed_cfg = read_env_from_path(path)
-    mode = get_env_mode(parsed_cfg, common_section_name=common_section_name, mode_key=mode_key)
+    mode = mode if mode is not None else get_env_mode(parsed_cfg, common_section_name=common_section_name,
+                                                      mode_key=mode_key)
     setenv(parsed_cfg=parsed_cfg,
            mode=mode,
            prepender=prepender,
@@ -143,22 +144,25 @@ def get_value_of_prepended_word(latest, word_length_pls_underscore):
         latest) - word_length_pls_underscore]
 
 
-def load_for_app(app_name, env_paths, schema=None, common_section_name=None,mode_key=None):
+def load_for_app(app_name, env_paths, schema=None, common_section_name=None, mode=None, mode_key=None):
     for path in env_paths:
         load_envs(path=path,
                   prepender=app_name,
                   schema=schema,
+                  mode=mode,
                   common_section_name=common_section_name,
                   mode_key=mode_key)  # Load Environment Variables
 
 
 def build_plans(group_name, env_paths, schema, eager_validate,
+                environment_mode,
                 common_section_identifier=ReservableEnvSections.common.value,
                 environment_identifier_key=ReservableEnvKeys.mode.value):
     return {
         group_name: {
             'env_paths': env_paths,
             'schema': schema,
+            'environment_mode': environment_mode,
             'eager_validate': eager_validate,
             'environment_identifier_key': environment_identifier_key,
             'common_section_identifier': common_section_identifier
@@ -170,11 +174,14 @@ def read_plan_and_load_environs_for_apps(config_object):
     apps_plan = getattr(config_object, 'plan')
     for app_name, config in apps_plan.items():
         schema = config.get('schema') if config.get('eager_validate') else None
-        common_section_name = config.get('common_section_identifier') if config.get('common_section_identifier') else None
+        common_section_name = config.get('common_section_identifier') if config.get(
+            'common_section_identifier') else None
         mode_key = config.get('environment_identifier_key') if config.get('environment_identifier_key') else None
+        mode = config.get('mode') if config.get('mode') else None
         load_for_app(app_name=app_name,
                      env_paths=config['env_paths'],
                      schema=schema,
+                     mode=mode,
                      common_section_name=common_section_name,
                      mode_key=mode_key)
 

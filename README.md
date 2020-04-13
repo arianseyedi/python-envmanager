@@ -7,6 +7,10 @@
 
 # Welcome to Envmanager for Python Docs
 
+Envmanager is a reliable tool to parse environment variables by providing a typing schema, in the most efficient way.
+
+Here is how you would use this library:
+
 1 - Define your schema as an enum or dictionary
 
 2 - Load cfg files using the loader function or decorator:
@@ -215,6 +219,17 @@ Here is the list of available casting methods:
     
     You can pass your own parser function that takes exactly 1 argument with no defaults
 
+#### Setting a new variable:
+You can use the env object to also set a variable
+
+#### Managing groups and prepended variables:
+You can use env in a context to get variables from different groups and also use contexts in the same way to access all variables prepended by a certain word!
+
+* Groupings
+
+* Prepended words
+
+
 ### The (Custom) Validator class
 You can create your own validator class. You must however ensure that your class implements function with the signature: *validate(self, value)* and **returns** the parsed value after validation.
 
@@ -227,8 +242,9 @@ class MyValidator(Validator):
     def validate(self, v):
         ... # validate v
         return parsed_value
-
 ```
+
+## Recommended Usage Patterns
 
 
 ## Issues
