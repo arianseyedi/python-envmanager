@@ -412,7 +412,7 @@ You can use env in a context to get variables from different groups and also use
 * Groupings
 ```python
 with env.group('GROUP2'):   # capture group
-    res = env('duplicate_variable')   # read variable 
+    res = env('duplicate_variable') 
     assert res == 'GROUP2_VALUE'  # Pass
 
 with env.group('GROUP1'):
