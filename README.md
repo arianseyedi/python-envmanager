@@ -236,7 +236,7 @@ env('an_int_value')  # returns an int
 env('email')  # returns validated email as string
 env('custom_key')  # returns your validator class' validate method return value
 ```
-   * Schemas may _partially_ capture the loaded environment variables or be absent from the configuration: 
+   * Schemas may _partially_ capture the loaded environment variables or be absent from the configuration altogether (i.e. no validation/parsing).: 
   
 ```python
 env(MyEnumSchema.my_variable)  # schema defined
