@@ -485,4 +485,9 @@ create a new feature branch from develop, commit and submit a PR. It'll be much 
 
 ### Dependencies and special thanks!
 This project heavily depends on the great work of other awesome developers of the open source world!
-- [pytest](https://docs.pytest.org/en/latest/) by [anatoly](https://pypi.org/user/anatoly/), [flub](https://pypi.org/user/flub/) and [other](https://pypi.org/project/pytest/) awesome devs
+- [pytest](https://docs.pytest.org/en/latest/) by [anatoly](https://pypi.org/user/anatoly/)
+- [marshmallow](https://marshmallow.readthedocs.io/en/stable/quickstart.html#validation)
+
+I was deeply inspired by [environs](https://pypi.org/project/environs/) package where I got some usage pattern samples.
+
+Enjoy!
