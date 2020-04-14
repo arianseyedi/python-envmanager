@@ -330,7 +330,7 @@ You may cast (the otherwise stringified) environment variable using env casting 
 my_int = env.int('my_schemaless_int_env_variable')
 ``` 
 
-> Note that using the casting methods will **override** the schema if used on keys whose schema is already defined.
+> Note that using the casting methods will **override** the schema if used on keys whose schema are already defined.
 
 Here is the list of available casting methods:
 * _**str(self, key)**_
