@@ -194,7 +194,7 @@ _**eager_validate**_:boolean *default = False*
 
 _**environment_mode**_:str *default = None*
 
-   * Str. In-configuration style of specifying application environment (e.g. PROD, DEV, LOCAL). Overrides in-file mode specifications.
+   * In-configuration style of specifying application environment (e.g. PROD, DEV, LOCAL). Overrides in-file mode specifications.
 
 
 _**schema**_:Union[dict, Enum] *default = False*
@@ -211,7 +211,7 @@ env('schema_less_variable')  # schema-less variable
 
 _**common_section_identifier**_:str *default = 'common'*
 
-   * The section name in the cfg file that contains values that are 'common' between environments (e.g. PROD, DEV, LOCAL etc.). Defaults to 'common'
+   * The section name in the cfg file that contains values that are 'common' between environments (e.g. PROD, DEV, LOCAL etc.).
 
 *my_env_vars.cfg*
 ```
@@ -228,7 +228,7 @@ environment_mode = prod <---- environment_identifier_key with value 'prod'
 
 _**environment_identifier_key**_:str *default = 'environment_mode'*
 
-   * The key that will be used to specify the mode for in-file style environment mode specification. Must reside in the "common" section. Defaults to "environment_mode". If key is missed, the corresponding environment's section variable will NOT be loaded (so only the common section will).
+   * The key that will be used to specify the mode for in-file style environment mode specification. Must reside in the "common" section. If key is missed, the corresponding environment's section variable will NOT be loaded (so only the common section will).
 
 *my_env_vars.cfg*
 ```
@@ -269,9 +269,9 @@ _**dict_object**_
     }
 ```
 
-_**environment_mode**_
+_**environment_mode**_:str *default = None*
 
-   * environment mode
+   * In-configuration style of specifying application environment (e.g. PROD, DEV, LOCAL). Overrides in-file mode specifications. This means if the mode is specified here, the parser will look for a section named after the mode in every file and if such mode exits, the values of that section will be loaded and associated with the specified group.
 
 ## Loading the Env Variables
 This usually happens at the point of entry of your application since one may need to access environment variables at any point within the app.
