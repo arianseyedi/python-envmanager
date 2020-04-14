@@ -458,7 +458,7 @@ class MyValidator(Validator):
 
 ## Recommended Usage Patterns
 
-* Single Schema, One or More *.cfg Files (Collision may happen):
+* Single Schema, One or More *.cfg Files (Collisions may happen):
 [Gist here](#)
 
 * Multiple Groups to handle Multiple *.cfg Files (Collision free):
@@ -488,6 +488,6 @@ This project heavily depends on the great work of other awesome developers of th
 - [pytest](https://docs.pytest.org/en/latest/) by [anatoly](https://pypi.org/user/anatoly/)
 - [marshmallow](https://marshmallow.readthedocs.io/en/stable/quickstart.html#validation)
 
-I was deeply inspired by [environs](https://pypi.org/project/environs/) package where I got some usage pattern samples.
+I was deeply inspired by [environs](https://pypi.org/project/environs/) package which I referenced for cool usage patterns.
 
 Enjoy!
