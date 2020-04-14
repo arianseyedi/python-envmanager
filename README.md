@@ -69,6 +69,7 @@ def app_entry_point():
 ```
 
 3 - Retrieval/Parsing stage
+
 _my_project.py_
 ```python
 from envmanager import Env
@@ -138,7 +139,8 @@ EnvManagerConfig provides all that is needed for envmanager to function properly
 wish to use Envmanager, you can configure Envmanager via EnvManagerConfig in the following two ways:
 
 * You have one or more configuration files to manage, and you do not care about name collisions:
-config.py
+
+_config.py_
 ```python
 config =  EnvManagerConfig(
     group_name='TESTERAPP',  # Optional. Defaults to PYTHON_APPLICATION
@@ -150,7 +152,7 @@ config =  EnvManagerConfig(
 
 * You have multiple configuration files and you want to ensure no collision:
 
-config.py
+_config.py_
 ```python
 config = EnvManagerConfig.by_group({
     'GROUP1': {
