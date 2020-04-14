@@ -46,9 +46,9 @@ class EnvManagerConfig:
                                     environment_identifier_key=environment_identifier_key)
 
     @staticmethod
-    def by_group(_dct: dict, environment_mode=None):
+    def by_group(dict_object: dict, environment_mode=None):
         plans = {}
-        for group_name, settings in _dct.items():
+        for group_name, settings in dict_object.items():
             plans.update(build_plans(group_name=group_name,
                                      env_paths=settings['env_paths'],
                                      schema=settings.get('schema'),

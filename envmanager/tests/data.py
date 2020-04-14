@@ -7,6 +7,8 @@ ROOT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)))  # Root dire
 ENVS_PATH = os.path.join(ROOT_DIR, 'envars_group_one.cfg')
 ENVS_PATH_2 = os.path.join(ROOT_DIR, 'envars_group_two.cfg')
 ENVS_PATH_CAST = os.path.join(ROOT_DIR, 'envars_casts.cfg')
+ENVS_PATH_MULTIFILE_1 = os.path.join(ROOT_DIR, 'envars_multifile_1.cfg')
+ENVS_PATH_MULTIFILE_2 = os.path.join(ROOT_DIR, 'envars_multifile_2.cfg')
 ENVS_PATH_EAGER_PRIMITIVE = os.path.join(ROOT_DIR, 'envars_eager_primitive.cfg')
 ENVS_PATH_EAGER_MARSHMALLOW = os.path.join(ROOT_DIR, 'envars_eager_marshmallow.cfg')
 ENVS_PATH_EAGER_CUSTOM = os.path.join(ROOT_DIR, 'envars_eager_custom.cfg')
@@ -14,8 +16,9 @@ ENVS_PATH_EAGER_MODS_SINGLE = os.path.join(ROOT_DIR, 'envars_modes_single.cfg')
 # ENVS_PATH_EAGER_MODS_MULTI = os.path.join(ROOT_DIR, 'envars_eager_custom.cfg')
 
 
-
 envloader_config_minimum = EnvManagerConfig(env_paths=[ENVS_PATH])
+
+envloader_config_multifile = EnvManagerConfig(env_paths=[ENVS_PATH_MULTIFILE_1, ENVS_PATH_MULTIFILE_2])
 
 envloader_config_enum = EnvManagerConfig(group_name='TESTERAPP', env_paths=[ENVS_PATH], schema=GroupOneSchema)
 
@@ -44,9 +47,8 @@ envloader_config_from_dict_multiapp = EnvManagerConfig.by_group({
     }
 })
 
-
 envloader_config_modes_and_common_section = EnvManagerConfig(group_name='TESTERAPP',
-                                                       env_paths=[ENVS_PATH_EAGER_MODS_SINGLE],
-                                                       common_section_identifier='mysection',
-                                                       # environment_identifier_key='myenvironment',
-                                                       eager_validate=True)
+                                                             env_paths=[ENVS_PATH_EAGER_MODS_SINGLE],
+                                                             common_section_identifier='mysection',
+                                                             # environment_identifier_key='myenvironment',
+                                                             eager_validate=True)

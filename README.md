@@ -7,24 +7,35 @@
 
 # Welcome to Envmanager for Python Docs
 
-Envmanager is a reliable tool to parse environment variables by providing a typing schema, in the most efficient way.
+Envmanager is a reliable tool to validate and parse environment variables by providing a typing schema, in the most efficient way.
 
 Here is how you would use this library:
 
-1 - Define your schema as an enum or dictionary
+1 - Define your schema as an enum or dictionary.    
+2 - Load and validate *.cfg files using the loader function or decorator.   
+3 - Reliably retrieve the expected object type upon retrieval.  
 
-2 - Load cfg files using the loader function or decorator:
+ >&#x1F534; **TLDR: Scroll to the bottom of the page for a full working example**
 
-3 - Use the same enum to get the keys, parsed according to the schema
+To give you a quick overview before diving deeper, here is how your code may look like:
 
+**Your env variables as cfg files**
+*my_env.cfg*
+```
+[common]
+an_int_value = 10
+email = bytectgroup@gmail.com
+custom_key = this_will_be_validated_by_me
+```
+...
 
-
-Here is how your code may look like:
+1 - Config Stage:
 
 _schema_definition.py_
 ```python
 from marshmallow import fields
 
+# Define Schema
 schema = { 
     "an_int_value": int, # use builtin types like str, int, float to parse the variables
     "email": fields.Email(),  # use full power of Marshmallow validator to parse your environment varialbes
@@ -32,6 +43,8 @@ schema = {
 }
 
 ...
+
+# Configure
 
 from envmanager import EnvManagerConfig
 
@@ -42,13 +55,7 @@ envloader_config = EnvManagerConfig(
 )
 ```
 
-*my_env.cfg*
-```
-[common]
-an_int_value = 10
-email = bytectgroup@gmail.com
-custom_key = this_will_be_validated_by_me
-```
+2 - Loading/Validation Stage
 
 _main.py_
 ```python
@@ -60,6 +67,7 @@ def app_entry_point():
     App.start()
 ```
 
+3 - Retrieval/Parsing stage
 _my_project.py_
 ```python
 from envmanager import Env
@@ -123,7 +131,145 @@ The mode, which tells the envmanager which section (in addition to the common se
       )
     ```
  
-## EnvManagerConfig class
+## EnvManagerConfig Class
+EnvManagerConfig provides all that is needed for envmanager to function properly. Based on the capacity at which you
+wish to use Envmanager, you can configure Envmanager via EnvManagerConfig in the following two ways:
+
+* You have one or more configuration files to manage, and you do not care about name collisions:
+config.py
+```python
+config =  EnvManagerConfig(
+    group_name='TESTERAPP',  # Optional. Defaults to PYTHON_APPLICATION
+    env_paths=[MY_ENV_FILE_PATH_1, MY_ENV_FILE_PATH_2, ...],  # multiple (or single) file(s)
+    schema=MySchema,  # Optional. enum or dictionary as per the documentation
+    eager_validate=True  # Validates during the loading time (typically at the beginning of your application) 
+)
+```
+
+* You have multiple configuration files and you want to ensure no collision:
+
+config.py
+```python
+config = EnvManagerConfig.by_group({
+    'GROUP1': {
+        'env_paths': [MY_ENV_FILE_1],  # all content will be saved under group 1
+        'schema': GroupOneSchema  # enum or dictionary as per the documentation
+    },
+    'GROUP2': {
+        'env_paths': [MY_ENV_FILE_2, MY_ENV_FILE_3],  # all content will be saved under group 2
+        'schema': GroupTwoSchema,  # enum or dictionary as per the documentation
+    }
+})
+```
+
+Class constructor signature:
+```python
+    def __init__(
+        self, 
+        env_paths,
+        group_name="PYTHON_APPLICATION",
+        eager_validate=False,
+        environment_mode=None,
+        schema=None,
+        common_section_identifier='common',
+        environment_identifier_key='environment_mode',
+    ):
+    ...
+```
+
+_**env_paths**_: list
+
+   * List. Contains all the *.cfg files you wish to parse
+
+_**group_name**_: str *default = PYTHON_APPLICATION*
+
+   * Optional. All the env-variables will be prepended by this value.
+    
+_**eager_validate**_:boolean *default = False*
+
+   * Validates according to the schema (if provided). Defaults to False, in which case the values will be saved without question, and if corrupted, you may get unexpected results upon casting or parsing the value at retreival-time.
+
+
+_**environment_mode**_:str *default = None*
+
+   * Str. In-configuration style of specifying application environment (e.g. PROD, DEV, LOCAL). Overrides in-file mode specifications.
+
+
+_**schema**_:Union[dict, Enum] *default = False*
+
+   * Schema corresponding to the env-variable files whose paths are provided. The keys on the schema must match the 
+   variable names in the cfg files exactly. Schemas may partially capture the environment variables in which case 
+   the schema-less variables need to be called using plain string values upon retrieval:
+```python
+env(MyEnumSchema.my_variable)  # schema defined
+...
+env('schema_less_variable')  # schema-less variable
+```
+
+
+_**common_section_identifier**_:str *default = 'common'*
+
+   * The section name in the cfg file that contains values that are 'common' between environments (e.g. PROD, DEV, LOCAL etc.). Defaults to 'common'
+
+*my_env_vars.cfg*
+```
+[common] <------------------- common_section_identifier (name must match)
+environment_mode = prod <---- environment_identifier_key with value 'prod'
+... <------------------------ all common values are loaded
+
+[prod] <--------------------- prod section is loaded
+....
+
+[local] <-------------------- whole section is ignored
+... 
+```
+
+_**environment_identifier_key**_:str *default = 'environment_mode'*
+
+   * The key that will be used to specify the mode for in-file style environment mode specification. Must reside in the "common" section. Defaults to "environment_mode". If key is missed, the corresponding environment's section variable will NOT be loaded (so only the common section will).
+
+*my_env_vars.cfg*
+```
+[common] <------------------- common_section_identifier
+environment_mode = prod <---- environment_identifier_key with value 'prod'
+an_int_value = 10
+
+[prod] <--------------------- prod section is read
+host=production-host
+
+[local] <-------------------- whole section ignored
+host=localhost 
+```
+
+Class method "by_group" signature:
+```python
+@staticmethod
+def by_group(
+    dict_object: dict,
+    environment_mode=None
+):
+        ...
+```
+_**dict_object**_
+    
+   * Has the following shape:  
+    
+``` python
+    {
+        'GROUP1': {
+            'env_paths': [MY_ENV_FILE_1],  # all content will be saved under group 1
+            'schema': GroupOneSchema  # enum or dictionary as per the documentation
+        },
+        'GROUP2': {
+            'env_paths': [MY_ENV_FILE_2, MY_ENV_FILE_3],  # all content will be saved under group 2
+            'schema': GroupTwoSchema,  # enum or dictionary as per the documentation
+        }
+    }
+```
+
+_**environment_mode**_
+
+   * environment mode
 
 ## Loading the Env Variables
 This usually happens at the point of entry of your application since one may need to access environment variables at any point within the app.
@@ -158,7 +304,7 @@ def app_entry_point():
 ```
 
 
-### Env class
+### Env Class
 You can access environment variables using an env object. Construct your Env class object by passing to the constructor the **same** config object used to load the env-variables earlier.
 
 ```python
@@ -239,17 +385,62 @@ Here is the list of available casting methods:
     You can pass your own parser function that takes exactly 1 argument with no defaults
 
 #### Setting a new variable:
-You can use the env object to also set a variable
+You can use the env object to also set an evnironment variable. The variable will be saved as a string. It is up to you 
+to use the casting methods to ensure the correct type when getting the variable back:
+
+```python
+env.set('new_variable', [1,2,3])
+...
+env('new_variable') == '[1,2,3]'  # returns true 
+env.list('new_variable') == [1,2,3]  # casted first -> returns true 
+```
+
+#### Deleting a variable
+```python
+env.clear('my_env_variable_1')  # no schema or dict schema, use plain string
+...
+env.clear(MySchemaEnum.my_env_variable_2)  # enum schema can be used to clear a variable much like retrieving one
+```
 
 #### Managing groups and prepended variables:
 You can use env in a context to get variables from different groups and also use contexts in the same way to access all variables prepended by a certain word!
 
 * Groupings
+```python
+with env.group('GROUP2'):   # capture group
+    res = env('duplicate_variable')   # read variable 
+    assert res == 'GROUP2_VALUE'  # Pass
+
+with env.group('GROUP1'):
+    res = env('duplicate_variable')
+    assert res == 'GROUP1_VALUE' # Pass
+```
 
 * Prepended words
 
+You may want to reduce redundancy by using contexts in case you have a large configuration file with a lot of groupings already done through namings such as the following case: 
+        
+```
+DB_VAR_HOST
+DB_VAR_PORT 
+DB_VAR_USERNAME
 
-### The (Custom) Validator class
+DB_REMOTE_HOST
+DB_REMOTE_PORT
+...
+```
+
+In this case you can use the *prepend* function in a context like so:              
+```python
+    with env.group('GROUP1'):
+        with env.prepend('DB'):  # you can nest contexts to capture a specific group!
+            with env.prepend('VAR'):
+                env('HOST')  # DB_VAR_HOST
+            with env.prepend('REMOTE'):  # still inside prepend('DB') context
+                env('HOST') # DB_REMOTE_HOST
+```
+
+### The (Custom) Validator Class
 You can create your own validator class. You must however ensure that your class implements function with the signature: *validate(self, value)* and **returns** the parsed value after validation.
 
 ```python
@@ -265,6 +456,11 @@ class MyValidator(Validator):
 
 ## Recommended Usage Patterns
 
+* Single Schema, One or More *.cfg Files (Collision may happen):
+[Gist here](#)
+
+* Multiple Groups to handle Multiple *.cfg Files (Collision free):
+[Gist here](#)
 
 ## Issues
 Please create an issue [here](https://github.com/arianseyedi/python-envmanager/issues). Please provide a brief
