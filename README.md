@@ -292,14 +292,19 @@ _**dict_object**_
    * Has the following shape:  
     
 ``` python
+
     {
         'GROUP1': {
-            'env_paths': [MY_ENV_FILE_1],  # all content will be saved under group 1
-            'schema': GroupOneSchema  # enum or dictionary as per the documentation
+            'env_paths': [MY_ENV_FILE_1],  # Mandatory. All content will be saved under group 1
+            'schema': GroupOneSchema,  # Optional. Enum or dictionary as per the documentation
+            'common_section_identifier': 'my_common_section_name',  # Optional. Defaults to "common".
+            'environment_identifier_key': 'my_environment_identifier_key',  # Optional. Defaults to "environment_mode"
+            'eager_validate': True  # Optional. Defaults to True
         },
         'GROUP2': {
-            'env_paths': [MY_ENV_FILE_2, MY_ENV_FILE_3],  # all content will be saved under group 2
-            'schema': GroupTwoSchema,  # enum or dictionary as per the documentation
+            'env_paths': [MY_ENV_FILE_2, MY_ENV_FILE_3],  # Mandatory. All content will be saved under group 2
+            'schema': GroupTwoSchema,  # Optional. Enum or dictionary as per the documentation
+            ... # so on
         }
     }
 ```
