@@ -15,11 +15,12 @@ Here is how you would use this library:
 2 - Load and validate *.cfg files using the loader function or decorator.   
 3 - Reliably retrieve the expected object type upon retrieval.  
 
- >&#x1F534; **TLDR: Scroll to the bottom of the page for a full working example**
+ >&#x1F534; **TLDR: Scroll to the bottom of the page for a full working examples**
 
 To give you a quick overview before diving deeper, here is how your code may look like:
 
 **Your env variables as cfg files**
+
 *my_env.cfg*
 ```
 [common]
@@ -79,7 +80,8 @@ def app_entry_point():
     print(env('email'))  # prints valid email
 ```
 
-## Documentation
+
+## Documentation    
 
 ### Guidelines
 
