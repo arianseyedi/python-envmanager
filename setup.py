@@ -9,7 +9,7 @@ setup(
     author='YOUR NAME',  # Type in your name
     author_email='bytectgroup@gmail.com',  # Type in your E-Mail
     url='https://github.com/arianseyedi/python-envmanager',  # Provide either the link to your github or to your website
-    download_url='https://github.com/arianseyedi/python-envmanager/archive/master.zip',  # I explain this later on
+    download_url='https://github.com/arianseyedi/python-envmanager/archive/v8.1.0.tar.gz',  # I explain this later on
     keywords=['environment', 'variables', 'parsing', 'config', 'configuration', 'envvars'],
     # Keywords that define your package best
     install_requires=[  # I get to this in a second
