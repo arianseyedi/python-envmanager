@@ -1,7 +1,8 @@
 import os
 
 from envmanager.core import EnvManagerConfig
-from envmanager.tests.resources import GroupTwoSchema, GroupOneSchema, dict_schema, EagerSchema
+from envmanager.tests.resources import GroupTwoSchema, GroupOneSchema, dict_schema, EagerSchema, \
+    EagerSchemaWithExtraParam, EagerSchemaNoMissingDict, EagerSchemaNoMissingEnum
 
 ROOT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)))  # Root directory of the project
 ENVS_PATH = os.path.join(ROOT_DIR, 'envars_group_one.cfg')
@@ -14,7 +15,7 @@ ENVS_PATH_EAGER_MARSHMALLOW = os.path.join(ROOT_DIR, 'envars_eager_marshmallow.c
 ENVS_PATH_EAGER_CUSTOM = os.path.join(ROOT_DIR, 'envars_eager_custom.cfg')
 ENVS_PATH_EAGER_MODS_SINGLE = os.path.join(ROOT_DIR, 'envars_modes_single.cfg')
 # ENVS_PATH_EAGER_MODS_MULTI = os.path.join(ROOT_DIR, 'envars_eager_custom.cfg')
-
+ENVS_PATH_NO_MISSING = os.path.join(ROOT_DIR, 'envars_no_missing.cfg')
 
 envloader_config_minimum = EnvManagerConfig(env_paths=[ENVS_PATH])
 
@@ -35,6 +36,22 @@ envloader_config_eager_marshmallow_error = EnvManagerConfig(group_name='TESTERAP
 envloader_config_eager_custom_error = EnvManagerConfig(group_name='TESTERAPP',
                                                        env_paths=[ENVS_PATH_EAGER_CUSTOM],
                                                        schema=EagerSchema, eager_validate=True)
+
+envloader_config_eager_missing_param_enumSchema = EnvManagerConfig(group_name='TESTERAPP',
+                                                                   env_paths=[ENVS_PATH],
+                                                                   schema=EagerSchemaWithExtraParam, eager_validate=True)
+
+envloader_config_eager_missing_param_dictSchema = EnvManagerConfig(group_name='TESTERAPP',
+                                                       env_paths=[ENVS_PATH],
+                                                       schema={'missing_variable': str}, eager_validate=True)
+
+envloader_config_eager_no_missing_param_enumSchema = EnvManagerConfig(group_name='TESTERAPP',
+                                                                   env_paths=[ENVS_PATH_NO_MISSING],
+                                                                   schema=EagerSchemaNoMissingEnum, eager_validate=True)
+
+envloader_config_eager_no_missing_param_dictSchema = EnvManagerConfig(group_name='TESTERAPP',
+                                                       env_paths=[ENVS_PATH_NO_MISSING],
+                                                       schema=EagerSchemaNoMissingDict, eager_validate=True)
 
 envloader_config_from_dict_multiapp = EnvManagerConfig.by_group({
     'GROUP1': {

@@ -28,9 +28,11 @@ class UnsupportedKeyType(Exception):
 class EagerValidationError(Exception):
     """ Attribute not found. """
 
-    def __init__(self, msg: str = None, key=None, value=None, schema=None):
+    def __init__(self, msg: str = None, key=None, value=None, schema=None, missing_param=None):
         if msg is not None:
             self.message = f'{msg}'
+        elif missing_param is not None:
+            self.message = f'Key {missing_param} is present in the schema but missing.'
         else:
             expl = f'{key} with value {value} is not parsable to schema type {type(schema)}' if key is not None and schema is not None and value is not None else ''
             self.message = f"Eager Validation failed. Some environment variables have values that will not be " \
