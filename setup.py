@@ -13,7 +13,7 @@ with open(path.join(this_directory, 'PyPI.md')) as f:
 """
 MAJ = 8
 MIN = 1
-FIX = 5
+FIX = 6
 
 
 setup(
