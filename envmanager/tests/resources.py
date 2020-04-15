@@ -61,3 +61,16 @@ class EagerSchema(Enum):
 
 class EagerSchemaWithExtraParam(Enum):
     not_in_the_list = int
+
+
+class EagerSchemaNoMissingEnum(Enum):
+    enviroment_mode = fields.Str()
+    common_str_param = fields.Str()
+    int_param = fields.Int()
+
+
+EagerSchemaNoMissingDict = {
+    'enviroment_mode': fields.Str(),
+    'common_str_param': fields.Str(),
+    'int_param': fields.Int()
+}

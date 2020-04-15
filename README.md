@@ -343,7 +343,7 @@ from envmanager import load_env, EnvManagerConfig
 
 config = EnvManagerConfig(...) 
 
-def app_entry_point():
+def my_function():
     load_env(config)  # run prior to all other imports - saves all cfg file content onto the os.environ
     from my_project import App  # ENSURE you do not import env-variable dependent code prior to envl_loader being called
     App.start()

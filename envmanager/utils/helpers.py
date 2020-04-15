@@ -201,6 +201,7 @@ def get_scheme_value_from_key_string_value(key, key_set):
         except AttributeError:
             raise EagerValidationError(missing_param=key)
 
+
 def validate_schema_eager(parsed_cfg, section, key, schema):
     key_set = schema  # enum or dict
     if key_set is not None:
