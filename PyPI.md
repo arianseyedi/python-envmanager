@@ -2,11 +2,11 @@
 
 Envmanager is a reliable tool to validate and parse environment variables by providing a typing schema, in the most efficient way.
 
-- [x] Validate and parse (or cast) your environment variables on the fly
+- Validate and parse (or cast) your environment variables on the fly
 
-- [x] Scope variables to the right environment (Prod, Dev, Staging, ...) all in one place.
+- Scope variables to the right environment (Prod, Dev, Staging, ...) all in one place.
 
-- [x] Ensure no collisions between separate environment variable files
+- Ensure no collisions between separate environment variable files
 
 
 Here is how you would use this library:
