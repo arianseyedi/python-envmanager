@@ -79,10 +79,10 @@ _my_project.py_
 from envmanager import Env
 env = Env(envloader_config)  # pass the same envloader config object to Env class
 
-def app_entry_point():
-    print(env('an_int_value'))  # prints as integer
-    print(env('custom_key'))  # prints as expected by your custom validator/parser
-    print(env('email'))  # prints valid email
+def my_function():
+    env('an_int_value')  # returns integer
+    env('custom_key')  # returns custom validator/parser validate method's return value
+    env('email')  # returns valid email
 ```
 
 
