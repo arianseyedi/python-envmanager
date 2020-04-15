@@ -9,6 +9,10 @@
 
 Envmanager is a reliable tool to validate and parse environment variables by providing a typing schema, in the most efficient way.
 
+- [x] Validate and parse (or cast) your environment variables on the fly
+- [x] Scope variables to the right environment (Prod, Dev, Staging, ...) all in one place.
+- [x] Ensure no collisions between separate environment variable files
+
 Here is how you would use this library:
 
 1 - Define your schema as an enum or dictionary.    
@@ -21,7 +25,7 @@ To give you a quick overview before diving deeper, here is how your code may loo
 
 **Your env variables as cfg files**
 
-*my_env.cfg*
+_my_env.cfg_
 ```
 [common]
 an_int_value = 10
@@ -111,19 +115,19 @@ The mode, which tells the envmanager which section (in addition to the common se
     
     ![img](assets/screenshot_modes_section.png)
     
-    Notice how the mode is named after the available section in the file. Changing the mode to dev will result in the host value being equal to 'dev-host' during run-time.
+    Notice how the mode is named after the available section in the file. Changing the value of the "environment_mode" to "dev" will result in the section named "dev" be loaded and parsed. Hence the value of the variable "value" would be equal to "dev" during run-time. Note that any other section than these two will be COMPLETELY ignored by the loader.
     
     - Note#1
         
     > You are NOT obligated to specify mode or any other section than the one you want. Either ensure the section name is set to "**common**" or specify the name using "**common_section_identifier**" argument of the configuration.
    
     - Note#2
-    > In case you wish to denote this key by a different value, you need to override the default value via "**environment_identifier_key**" argument of the configuration.
+    > In case you wish to denote this key by a different value, you need to override the default value via "**environment_identifier_key**" argument of the configuration. Read more about the EnvManagerConfig in the documentation below.
     
 * Defining the the environment mode during configuration:
     
     In case of loading multiple *.cfg files (e.g. env_paths argument is an array of more than a single path) you may want to
-    specify the environment one time only, since a mismatch may cause some nasty runtime complications. In that case, simply set the "**environment_mode**" argument of the configuration which is by default None which causes the Envmanager to fall back on file-style mode specification:
+    specify the environment one time only, since a mismatch may cause some nasty runtime complications (e.g. db.cfg file is on "dev" mode, while app.cfg file is on "prod" mode). In that case, simply set the "**environment_mode**" argument of the configuration class constructor. Doing so will result in automatically **ignoring** the in-file style mode specifications (even if they are defined already):
     ```python
     from envmanager import EnvManagerConfig
     from MyConstants import ENVIRONMENT_MODE
@@ -191,7 +195,7 @@ _**group_name**_: str *default = PYTHON_APPLICATION*
     
 _**eager_validate**_:boolean *default = False*
 
-   * Validates according to the schema (if provided). Defaults to False, in which case the values will be saved without question, and if corrupted, you may get unexpected results upon casting or parsing the value at retreival-time.
+   * Validates env-variables according to the schema (if provided). Also checks for missing parameters. Defaults to False, in which case the values will be saved without question, and if corrupted, you may get unexpected results upon casting or parsing the value at retreival-time.
 
 
 _**environment_mode**_:str *default = None*
@@ -199,17 +203,50 @@ _**environment_mode**_:str *default = None*
    * In-configuration style of specifying application environment (e.g. PROD, DEV, LOCAL). Overrides in-file mode specifications.
 
 
-_**schema**_:Union[dict, Enum] *default = False*
+_**schema**_:Union[dict, Enum] *default = None*
 
    * Schema corresponding to the env-variable files whose paths are provided. The keys on the schema must match the 
-   variable names in the cfg files exactly. Schemas may partially capture the environment variables in which case 
-   the schema-less variables need to be called using plain string values upon retrieval:
+   variable names in the cfg files exactly. 
+   
+   * Enum as a schema:
+    An enum has a key and a value (i.e. my_key = validator) and is a great candidate for a Schema since it can be used for both validation/parsing (MySchema.my_key.value) and value retrieval (MySchema.my_key).
 ```python
-env(MyEnumSchema.my_variable)  # schema defined
+from enum import Enum
+ 
+class MySchema(Enum):
+    an_int_value = fields.Int()  # DO NOT use builtin types (e.g. int, str) as the key/value pairs must be unique references in an Enum class
+    email = fields.Email()
+    custom_key = MyCustomValidator()  # implements validate(self, value: str) method. Returns parsed value
+
 ...
-env('schema_less_variable')  # schema-less variable
+
+env(MySchema.an_int_value)  # returns an int
+env(MySchema.email)  # returns validated email as string
+env(MySchema.custom_key)  # returns your validator class' validate method return value
 ```
 
+   * Dictionary as a schema:
+        An enum has a key and a value (i.e. my_key = validator) and is a great candidate for a Schema since it can be used for both validation/parsing (MySchema.my_key.value) and value retrieval (MySchema.my_key).
+```python
+schema = { 
+    "an_int_value": int, # use can builtin types like str, int, float to parse the variables, if you wish
+    "email": fields.Email(),  # use full power of Marshmallow validator to parse your environment varialbes
+    "custom_key": MyCustomValidator(),  # you can pass your own validator object to validate and parse custom environment variables!
+}
+
+...
+
+env('an_int_value')  # returns an int
+env('email')  # returns validated email as string
+env('custom_key')  # returns your validator class' validate method return value
+```
+   * Schemas may _partially_ capture the loaded environment variables or be absent from the configuration altogether (i.e. no validation/parsing).: 
+  
+```python
+env(MyEnumSchema.my_variable)  # schema defined
+
+env('schema_less_variable')  # schema-less variable
+```
 
 _**common_section_identifier**_:str *default = 'common'*
 
@@ -259,14 +296,19 @@ _**dict_object**_
    * Has the following shape:  
     
 ``` python
+
     {
         'GROUP1': {
-            'env_paths': [MY_ENV_FILE_1],  # all content will be saved under group 1
-            'schema': GroupOneSchema  # enum or dictionary as per the documentation
+            'env_paths': [MY_ENV_FILE_1],  # Mandatory. All content will be saved under group 1
+            'schema': GroupOneSchema,  # Optional. Enum or dictionary as per the documentation
+            'common_section_identifier': 'my_common_section_name',  # Optional. Defaults to "common".
+            'environment_identifier_key': 'my_environment_identifier_key',  # Optional. Defaults to "environment_mode"
+            'eager_validate': True  # Optional. Defaults to True
         },
         'GROUP2': {
-            'env_paths': [MY_ENV_FILE_2, MY_ENV_FILE_3],  # all content will be saved under group 2
-            'schema': GroupTwoSchema,  # enum or dictionary as per the documentation
+            'env_paths': [MY_ENV_FILE_2, MY_ENV_FILE_3],  # Mandatory. All content will be saved under group 2
+            'schema': GroupTwoSchema,  # Optional. Enum or dictionary as per the documentation
+            ... # so on
         }
     }
 ```
@@ -301,7 +343,7 @@ from envmanager import load_env, EnvManagerConfig
 
 config = EnvManagerConfig(...) 
 
-def app_entry_point():
+def my_function():
     load_env(config)  # run prior to all other imports - saves all cfg file content onto the os.environ
     from my_project import App  # ENSURE you do not import env-variable dependent code prior to envl_loader being called
     App.start()
@@ -344,6 +386,8 @@ Here is the list of available casting methods:
     parses the target environment variable as a dictionary using json.loads function
 
 * _**decimal(self, key, context=None)**_
+
+    parses the target environment variable as a Decimal object.
 
 * _**list(self, key)**_:
     

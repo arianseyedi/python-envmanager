@@ -1,20 +1,29 @@
-from distutils.core import setup
+from setuptools import setup
+
+# read the contents of your README file
+from os import path
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'PyPI.md')) as f:
+    long_description = f.read()
 
 setup(
     name='envmanager',  # How you named your package folder (MyLib)
     packages=['envmanager'],  # Chose the same as "name"
-    version='8.1.0',  # Start with a small number and increase it with every change you make
+    version='8.1.4',  # Start with a small number and increase it with every change you make
     license='MIT',  # Chose a license from here: https://help.github.com/articles/licensing-a-repository
-    description='TYPE YOUR DESCRIPTION HERE',  # Give a short description about your library
-    author='YOUR NAME',  # Type in your name
+    description='Validated environment variable management',  # Give a short description about your library
+    long_description=long_description,
+    long_description_content_type='text/markdown',  # This is important!
+    author='Arian Seyedi @Bytect',  # Type in your name
     author_email='bytectgroup@gmail.com',  # Type in your E-Mail
     url='https://github.com/arianseyedi/python-envmanager',  # Provide either the link to your github or to your website
-    download_url='https://github.com/arianseyedi/python-envmanager/archive/master.zip',  # I explain this later on
+    download_url='https://github.com/arianseyedi/python-envmanager/archive/v8.1.4.tar.gz',  # I explain this later on
     keywords=['environment', 'variables', 'parsing', 'config', 'configuration', 'envvars'],
     # Keywords that define your package best
     install_requires=[  # I get to this in a second
         'marshmallow',
     ],
+    setup_requires=['wheel'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         # Chose either "3 - Alpha", "4 - Beta" or "5 - Production/Stable" as the current state of your package
