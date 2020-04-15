@@ -387,6 +387,8 @@ Here is the list of available casting methods:
 
 * _**decimal(self, key, context=None)**_
 
+    parses the target environment variable as a Decimal object.
+
 * _**list(self, key)**_:
     
     parses the target environment variable as a string
