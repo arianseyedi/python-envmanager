@@ -1,2 +1,2 @@
 from envmanager.core import Env, EnvManagerConfig, Validator, load_env
-import envmanager.decorators
+from envmanager.decorators import env_loader
