@@ -6,10 +6,20 @@ this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, 'PyPI.md')) as f:
     long_description = f.read()
 
+"""
+ VERSIONING: 
+    e.g.    1  .   9   .   7
+           MAJ    MIN     FIX
+"""
+MAJ = 8
+MIN = 1
+FIX = 4
+
+
 setup(
     name='envmanager',  # How you named your package folder (MyLib)
     packages=['envmanager'],  # Chose the same as "name"
-    version='8.1.4',  # Start with a small number and increase it with every change you make
+    version=f'{MAJ}.{MIN}.{FIX}',  # Start with a small number and increase it with every change you make
     license='MIT',  # Chose a license from here: https://help.github.com/articles/licensing-a-repository
     description='Validated environment variable management',  # Give a short description about your library
     long_description=long_description,
@@ -17,7 +27,7 @@ setup(
     author='Arian Seyedi @Bytect',  # Type in your name
     author_email='bytectgroup@gmail.com',  # Type in your E-Mail
     url='https://github.com/arianseyedi/python-envmanager',  # Provide either the link to your github or to your website
-    download_url='https://github.com/arianseyedi/python-envmanager/archive/v8.1.4.tar.gz',  # I explain this later on
+    download_url=f'https://github.com/arianseyedi/python-envmanager/archive/v{MAJ}.{MIN}.{FIX}.tar.gz',  # I explain this later on
     keywords=['environment', 'variables', 'parsing', 'config', 'configuration', 'envvars'],
     # Keywords that define your package best
     install_requires=[  # I get to this in a second
