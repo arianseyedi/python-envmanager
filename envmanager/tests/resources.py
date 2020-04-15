@@ -57,3 +57,7 @@ class EagerSchema(Enum):
     validation_error_email_marshmallow = fields.Email()
     validation_error_custom = ComplexValidator('this one will not be validated.')
     validation_error_int = int
+
+
+class EagerSchemaWithExtraParam(Enum):
+    not_in_the_list = int

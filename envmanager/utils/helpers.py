@@ -191,11 +191,15 @@ def get_scheme_value_from_key_string_value(key, key_set):
         dict_val = key_set.get(key)
         if dict_val is not None:
             return dict_val
+        else:
+            raise EagerValidationError(missing_param=key)
     elif type(key_set) is type(Enum):
-        enum_key = getattr(key_set, key)
-        if enum_key is not None:
-            return enum_key.value
-
+        try:
+            enum_key = getattr(key_set, key)
+            if enum_key is not None:
+                return enum_key.value
+        except AttributeError:
+            raise EagerValidationError(missing_param=key)
 
 def validate_schema_eager(parsed_cfg, section, key, schema):
     key_set = schema  # enum or dict

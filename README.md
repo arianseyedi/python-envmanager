@@ -9,6 +9,10 @@
 
 Envmanager is a reliable tool to validate and parse environment variables by providing a typing schema, in the most efficient way.
 
+- [x] Validate and parse (or cast) your environment variables on the fly
+- [x] Scope variables to the right environment (Prod, Dev, Staging, ...) all in one place.
+- [x] Ensure no collisions between separate environment variable files
+
 Here is how you would use this library:
 
 1 - Define your schema as an enum or dictionary.    
@@ -191,7 +195,7 @@ _**group_name**_: str *default = PYTHON_APPLICATION*
     
 _**eager_validate**_:boolean *default = False*
 
-   * Validates according to the schema (if provided). Defaults to False, in which case the values will be saved without question, and if corrupted, you may get unexpected results upon casting or parsing the value at retreival-time.
+   * Validates env-variables according to the schema (if provided). Also checks for missing parameters. Defaults to False, in which case the values will be saved without question, and if corrupted, you may get unexpected results upon casting or parsing the value at retreival-time.
 
 
 _**environment_mode**_:str *default = None*
