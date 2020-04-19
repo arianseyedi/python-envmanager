@@ -229,7 +229,7 @@ env(MySchema.custom_key)  # returns your validator class' validate method return
 ```
 
    * Dictionary as a schema:
-        An enum has a key and a value (i.e. my_key = validator) and is a great candidate for a Schema since it can be used for both validation/parsing (MySchema.my_key.value) and value retrieval (MySchema.my_key).
+        A dictionary can be used to describe the schema. In a dictionary, unlike an Enum, you are allowed to use primitive types such as int, float, str etc.
 ```python
 schema = { 
     "an_int_value": int, # use can builtin types like str, int, float to parse the variables, if you wish
