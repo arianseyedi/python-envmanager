@@ -11,6 +11,6 @@ def env_loader(config_object: object) -> Callable:
     read_plan_and_load_environs_for_apps(config_object)
 
     def wrapper(func: Callable) -> Callable:
-        return func()
+        return func
 
     return wrapper

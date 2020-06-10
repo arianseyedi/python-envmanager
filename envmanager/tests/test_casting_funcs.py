@@ -24,7 +24,7 @@ def env():
         from envmanager.core import Env
         return Env(config)
 
-    return inner
+    return inner()
 
 
 def test_set_value(env):
